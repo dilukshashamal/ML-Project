@@ -40,19 +40,19 @@ jobs:
           # Downloading 'stud.csv' or copy from an accessible location
           if [ ! -f notebook/data/stud.csv ]; then
             echo "Downloading stud.csv..."
-            curl -L -o notebook/data/stud.csv https://github.com/dilukshashamal/ML-Project/blob/main/notebook/data/stud.csv
+            curl -L -o notebook/data/stud.csv https://github.com/dilukshashamal/ML-Project/main/notebook/data/stud.csv
           fi
           
           # Downloading 'model.pkl' or copy from an accessible location
           if [ ! -f artifacts/model.pkl ]; then
             echo "Downloading model.pkl..."
-            curl -L -o artifacts/model.pkl https://github.com/dilukshashamal/ML-Project/blob/main/artifacts/model.pkl
+            curl -L -o artifacts/model.pkl https://github.com/dilukshashamal/ML-Project/main/artifacts/model.pkl
           fi
 
           # Downloading 'proprocessor.pkl' or copy from an accessible location
           if [ ! -f artifacts/proprocessor.pkl ]; then
             echo "Downloading proprocessor.pkl..."
-            curl -L -o artifacts/proprocessor.pkl https://github.com/dilukshashamal/ML-Project/blob/main/artifacts/proprocessor.pkl
+            curl -L -o artifacts/proprocessor.pkl https://github.com/dilukshashamal/ML-Project/main/artifacts/proprocessor.pkl
           fi
 
       - name: Lint with flake8
