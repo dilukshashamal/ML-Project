@@ -34,10 +34,10 @@ jobs:
           mkdir -p notebook/data
           # Add the data file manually if not tracked in the repo
           echo "Downloading necessary data files..."
-          curl -o notebook/data/stud.csv 
+          curl -o notebook/data/stud.csv https://github.com/dilukshashamal/ML-Project/blob/main/notebook/data/stud.csv
           mkdir -p artifacts
-          curl -o artifacts/model.pkl 
-          curl -o artifacts/proprocessor.pkl 
+          curl -o artifacts/model.pkl https://github.com/dilukshashamal/ML-Project/blob/main/artifacts/model.pkl
+          curl -o artifacts/proprocessor.pkl https://github.com/dilukshashamal/ML-Project/blob/main/artifacts/proprocessor.pkl
 
       - name: Lint with flake8
         run: |
