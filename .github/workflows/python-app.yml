@@ -1,67 +1,45 @@
-name: Python Application CI/CD
+name: Run app.py on Change
 
 on:
   push:
-    branches: [ "main" ]
+    branches: 
+      - main # Runs the workflow on push events to the main branch
   pull_request:
-    branches: [ "main" ]
-
-permissions:
-  contents: read
+    branches: 
+      - main # Runs the workflow on pull request events to the main branch
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      - name: Checkout Repository Content
+        uses: actions/checkout@v4 # Checks out the repository content to the GitHub runner
 
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
-          python-version: "3.10"
-
-      - name: Install Dependencies
+          python-version: '3.8' # Specifies the Python version needed
+          
+      - name: Install Python Packages
         run: |
           python -m pip install --upgrade pip
-          pip install flake8 pytest
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-
-      - name: Prepare Data and Artifacts
-        run: |
-          # Create necessary directories
-          mkdir -p notebook/data
-          mkdir -p artifacts
-
-          # Check if required data files are present, otherwise download or copy them
-          # Replace the URL or copy path as needed for your context
+          pip install -r requirements.txt # Installs dependencies from requirements.txt
           
-          # Downloading 'stud.csv' or copy from an accessible location
-          if [ ! -f notebook/data/stud.csv ]; then
-            echo "Downloading stud.csv..."
-            curl -L -o notebook/data/stud.csv https://github.com/dilukshashamal/ML-Project/main/notebook/data/stud.csv
-          fi
+      - name: Execute Python Script
+        env:
+          SOME_SECRET: ${{ secrets.SOME_SECRET }} # Passes secrets if needed by the script
+        run: python app.py # Executes the main Python script
           
-          # Downloading 'model.pkl' or copy from an accessible location
-          if [ ! -f artifacts/model.pkl ]; then
-            echo "Downloading model.pkl..."
-            curl -L -o artifacts/model.pkl https://github.com/dilukshashamal/ML-Project/main/artifacts/model.pkl
-          fi
-
-          # Downloading 'proprocessor.pkl' or copy from an accessible location
-          if [ ! -f artifacts/proprocessor.pkl ]; then
-            echo "Downloading proprocessor.pkl..."
-            curl -L -o artifacts/proprocessor.pkl https://github.com/dilukshashamal/ML-Project/main/artifacts/proprocessor.pkl
-          fi
-
-      - name: Lint with flake8
+      - name: Commit Changes
         run: |
-          # Stop the build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          # Exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-
-      - name: Test with pytest
-        run: |
-          pytest --maxfail=5 --disable-warnings
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -A
+          git diff-index --quiet HEAD || git commit -m "Updated logs from main.py" --allow-empty # Commits only if there are changes
+          
+      - name: Push Changes
+        uses: ad-m/github-push-action@v0.6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: main # Pushes the changes back to the main branch
