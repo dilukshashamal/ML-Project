@@ -2,16 +2,16 @@ name: Run app.py on Change
 
 on:
   push:
-    branches:
+    branches: 
       - main
   pull_request:
-    branches:
+    branches: 
       - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout Repository Content
         uses: actions/checkout@v4
@@ -34,11 +34,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Execute Python Script
+      - name: Execute Python Script in Background
         env:
           SOME_SECRET: ${{ secrets.SOME_SECRET }}
         run: |
-          python app.py
+          nohup python app.py & # Runs the script in the background
 
       - name: Commit Changes
         run: |
@@ -50,5 +50,5 @@ jobs:
       - name: Push Changes
         uses: ad-m/github-push-action@v0.6.0
         with:
-          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # Use your PAT here
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           branch: main
