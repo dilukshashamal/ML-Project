@@ -3,10 +3,10 @@ name: Run app.py on Change
 on:
   push:
     branches: 
-      - main # Runs the workflow on push events to the main branch
+      - main
   pull_request:
     branches: 
-      - main # Runs the workflow on pull request events to the main branch
+      - main
 
 jobs:
   build:
@@ -14,32 +14,41 @@ jobs:
     
     steps:
       - name: Checkout Repository Content
-        uses: actions/checkout@v4 # Checks out the repository content to the GitHub runner
+        uses: actions/checkout@v4
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.8' # Specifies the Python version needed
-          
+          python-version: '3.9'
+
+      - name: Cache Python Packages
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
       - name: Install Python Packages
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt # Installs dependencies from requirements.txt
-          
-      - name: Execute Python Script
+          pip install -r requirements.txt
+
+      - name: Execute Python Script in Background
         env:
-          SOME_SECRET: ${{ secrets.SOME_SECRET }} # Passes secrets if needed by the script
-        run: python app.py # Executes the main Python script
-          
+          SOME_SECRET: ${{ secrets.SOME_SECRET }}
+        run: |
+          nohup python app.py & # Runs the script in the background
+
       - name: Commit Changes
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add -A
-          git diff-index --quiet HEAD || git commit -m "Updated logs from main.py" --allow-empty # Commits only if there are changes
-          
+          git diff-index --quiet HEAD || git commit -m "Updated logs from main.py" --allow-empty
+
       - name: Push Changes
         uses: ad-m/github-push-action@v0.6.0
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: main # Pushes the changes back to the main branch
+          branch: main
