@@ -34,7 +34,11 @@ jobs:
           git config --local user.email "dilukshashamal2001@gmail.com"
           git config --local user.name "dilukshashamal"
           git add -A
-          git diff-index --quiet HEAD || (git commit -a -m "updated logs" --allow-empty)
+          if ! git diff --cached --quiet; then
+            git commit -m "updated logs"
+          else
+            echo "No changes to commit"
+          fi
 
       - name: Push changes
         uses: ad-m/github-push-action@v0.6.0
