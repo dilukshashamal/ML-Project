@@ -45,4 +45,4 @@ This project is built using a **data-driven approach** and follows best practice
     ```
 
 ## Screenshots
-![Homepage](./assets/homepage.png)
+![Homepage](./assets/homepage.jpeg)
