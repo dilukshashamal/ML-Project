@@ -2,16 +2,16 @@ name: Run app.py on Change
 
 on:
   push:
-    branches: 
+    branches:
       - main
   pull_request:
-    branches: 
+    branches:
       - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout Repository Content
         uses: actions/checkout@v4
@@ -34,21 +34,21 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
-      - name: Execute Python Script in Background
+      - name: Execute Python Script
         env:
           SOME_SECRET: ${{ secrets.SOME_SECRET }}
         run: |
-          nohup python app.py & # Runs the script in the background
+          python app.py
 
       - name: Commit Changes
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
+          git config --local user.email "dilukshashamal2001@gmail.com"
+          git config --local user.name "dilukshashamal"
           git add -A
           git diff-index --quiet HEAD || git commit -m "Updated logs from main.py" --allow-empty
 
       - name: Push Changes
         uses: ad-m/github-push-action@v0.6.0
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # Use your PAT here
           branch: main
