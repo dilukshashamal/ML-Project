@@ -29,11 +29,11 @@ This project is built using a **data-driven approach** and follows best practice
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/your-username/student-performance-indicator.git
+    git clone [https://github.com/your-username/student-performance-indicator.git](https://github.com/dilukshashamal/ML-Project.git)
     ```
 2. Navigate to the project directory:
     ```bash
-    cd student-performance-indicator
+    cd ML Project
     ```
 3. Install the required dependencies:
     ```bash
